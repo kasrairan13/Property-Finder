@@ -8,6 +8,7 @@ from ast import (
     Name,
     Call,
 )
+from typing_extensions import Any
 
 
 class Validation:
@@ -16,7 +17,7 @@ class Validation:
         return os.path.isfile(path)
     
     @staticmethod
-    def is_empty(value) -> bool:
+    def is_empty(value: Any) -> bool:
         return value
     
 
