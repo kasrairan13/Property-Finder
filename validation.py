@@ -8,7 +8,6 @@ from ast import (
     Name,
     Call,
 )
-from typing_extensions import Any
 
 
 class Validation:
@@ -16,32 +15,48 @@ class Validation:
     def file_exists(path: str) -> bool:
         return os.path.isfile(path)
     
-    @classmethod
-    def is_type(cls, obj: Any, type: Any) -> bool:
-        return isinstance(obj, type)
+    @staticmethod
+    def is_empty(value) -> bool:
+        return value
     
-    @classmethod
-    def is_assign(cls, node: AST) -> bool:
-        return cls.is_type(node, Assign)
-    
-    @classmethod
-    def is_attribute(cls, node: AST) -> bool:
-        return cls.is_type(node, Attribute)
-    
-    @classmethod
-    def is_classdef(cls, node: AST) -> bool:
-        return cls.is_type(node, ClassDef)
-    
-    @classmethod
-    def is_functiondef(cls, node: AST) -> bool:
-        return cls.is_type(node, FunctionDef)
-    
-    @classmethod
-    def is_name(cls, node: AST) -> bool:
-        return cls.is_type(node, Name)
-    
-    @classmethod
-    def is_call(cls, node: AST) -> bool:
-        return cls.is_type(node, Call)
 
+class AstValidation:
+    @staticmethod
+    def is_assign(node: AST) -> bool:
+        return isinstance(node, Assign)
     
+    @staticmethod
+    def is_attribute(node: AST) -> bool:
+        return isinstance(node, Attribute)
+    
+    @staticmethod
+    def is_classdef(node: AST) -> bool:
+        return isinstance(node.parent, ClassDef)
+    
+    @staticmethod
+    def is_functiondef(node: AST) -> bool:
+        return isinstance(node, FunctionDef)
+    
+    @staticmethod
+    def is_name(node: AST) -> bool:
+        return isinstance(node.func, Name)
+    
+    @staticmethod
+    def is_call(node: AST) -> bool:
+        return isinstance(node.value, Call)
+    
+    @staticmethod
+    def is_property(node: str) -> bool:
+        valid = AstValidation.is_name(node)
+        return valid and node.id == "property"
+    
+    @staticmethod
+    def is_setter(node) -> bool:
+        valid = AstValidation.is_attribute(node)
+        return valid and node.attr == "setter"
+    
+    @staticmethod
+    def is_deleter(node: str) -> bool:
+        valid = AstValidation.is_attribute(node)
+        return valid and node.attr == "deleter"
+
