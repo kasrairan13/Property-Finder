@@ -1,5 +1,5 @@
 from ast import AST, iter_child_nodes, walk, unparse, parse
-from typing import List, Set, Iterable
+from typing import List, Set
 
 from validation import AV
 
@@ -33,12 +33,12 @@ class ASTTools:
         for names in list_names:
             items = set()
             for node in ASTTools.walk_in_root(root):
-                if (
-                    AV.is_classdef(node) or
-                    (AV.is_assign(node) and node.targets[0].id in names) or
-                    (AV.is_functiondef(node) and node.name in names)
-                ):
-                    items.add(unparse(node))
+                if AV.is_classdef(node):
+                    if (
+                        (AV.is_functiondef(node) and node.name in names) or
+                        (AV.is_assign(node) and node.targets[0].id in names)
+                    ):
+                        items.add(unparse(node))
             result.append(items)
         return result
 
@@ -59,9 +59,6 @@ class PropertyAnalyzer:
         self.instance_list = list()
         self.method_list = list()
 
-        # set parents
-        ASTTools.set_parents(self.root)
-
     def property_instances(self) -> List[Set[str]]:
         for node in ASTTools.walk_in_root(self.root):
             if AV.is_property_assign(node):
@@ -78,7 +75,10 @@ class PropertyAnalyzer:
         return self.method_list
     
     def use(self):
+        ASTTools.set_parents(self.root)
+        self.property_instances()
         instance_list = ASTTools.unparse_node(self.root, self.instance_list)
+        self.property_methods()
         method_list = ASTTools.related_methods(self.method_list)
         return [instance_list, method_list]
 
