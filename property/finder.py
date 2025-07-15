@@ -43,7 +43,7 @@ class ASTTools:
         return result
 
     @staticmethod
-    def related_properties(list_node: List[str]) -> List[Set[str]]:
+    def related_methods(list_node: List[str]) -> List[Set[str]]:
         properties_dict = dict()
         for node in list_node:
             unparse_node = unparse(node)
@@ -59,6 +59,9 @@ class PropertyAnalyzer:
         self.instance_list = list()
         self.method_list = list()
 
+        # set parents
+        ASTTools.set_parents(self.root)
+
     def property_instances(self) -> List[Set[str]]:
         for node in ASTTools.walk_in_root(self.root):
             if AV.is_property_assign(node):
@@ -73,3 +76,9 @@ class PropertyAnalyzer:
                 if AV.is_property_decorator(decorator):
                     self.method_list.append(node)
         return self.method_list
+    
+    def use(self):
+        instance_list = ASTTools.unparse_node(self.root, self.instance_list)
+        method_list = ASTTools.related_methods(self.method_list)
+        return [instance_list, method_list]
+
