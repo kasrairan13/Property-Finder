@@ -1,10 +1,6 @@
 from sys import path
 from typing import List
 
-from file import File
-from path import Path
-from validation import Validation
-
 
 class Use:
     setup_list = {
@@ -22,6 +18,7 @@ class Use:
             file_name: str,
             header: List[str]
     ):
+        from .validation import Validation
         validation = Validation()
         if not (
             validation.is_int(depth) and
@@ -40,6 +37,8 @@ class Use:
 
     @staticmethod
     def run():
+        from .file import File
+        from .path import Path
         path_class = Path()
         file_class = File()
         list_path = path_class.get_info()

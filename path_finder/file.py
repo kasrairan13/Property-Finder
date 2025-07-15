@@ -1,8 +1,8 @@
 from csv import DictWriter
 
-from models import Use
-from path import Path
-from validation import Validation
+from .models import Use
+from .path import Path
+from .validation import Validation
 
 
 class File:

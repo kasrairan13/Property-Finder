@@ -2,7 +2,7 @@ from sys import argv
 from os import listdir, path
 from typing import Any, List
 
-from models import Use
+from .models import Use
 
 
 class Path:

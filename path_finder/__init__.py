@@ -1,4 +1,4 @@
-from models import Use
+from .models import Use
 
 
 __all__ = ["Use"]
